@@ -1,0 +1,10 @@
+.header__menu-pic_type_open {
+  top: 28px;
+  background-image: url(../../../../images/menu.svg);
+}
+
+@media all and (max-width: 410px) {
+  .header__menu-pic_type_open {
+    visibility: visible;
+  }
+}

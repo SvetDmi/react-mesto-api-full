@@ -1,0 +1,17 @@
+.elements__like {
+    width: 22px;
+    height: 20px;
+    background-image: url(../../../images/like.svg);
+    border: none;
+    
+ 
+}
+
+.elements__like_active {
+    opacity: 1;
+    background: url(../../../images/like2.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    
+  }
+

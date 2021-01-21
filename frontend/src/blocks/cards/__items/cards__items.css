@@ -1,0 +1,15 @@
+
+.cards__items {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0 0 65px 0;
+    width: 100%;
+
+}
+
+@media all and (max-width: 800px) {
+    .cards__items {
+        justify-content: center;
+        }
+}

@@ -1,0 +1,15 @@
+.elements__trash {
+    width: 18px;
+    height: 19px;
+    background-image: url(../../../images/trash.png);
+    border: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 23px;
+    z-index: 10; 
+    display: none;
+}
+.elements__trash_active {
+    display: block;
+}

@@ -1,0 +1,26 @@
+@import url(./_subject/popup__input_subject_job.css);
+@import url(./_subject/popup__input_subject_name.css);
+@import url(./_subject/popup__input_subject_pic-title.css);
+@import url(./_subject/popup__input_subject_pic-link.css);
+
+
+
+.popup__input {
+    
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    font-family: "Inter", "Arial", sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 1.2;
+    padding: 13px 0 13px 2px;
+    margin-bottom: 15px;
+    width: 100%;
+    color: black;
+}
+
+
+.popup__input:focus {
+    outline: 1px solid blue;    
+  }
+

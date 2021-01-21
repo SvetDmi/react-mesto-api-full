@@ -1,0 +1,10 @@
+.header__link_out {
+  color: #a9a9a9;
+}
+
+@media all and (max-width: 410px) {
+  .header__link_out {
+    align-self: center;
+    padding: 0 0 40px 0;
+  }
+}

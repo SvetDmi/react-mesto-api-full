@@ -1,0 +1,10 @@
+.header__menu-pic {
+  width: 30px;
+  height: 30px;
+  border: none;
+  position: absolute;
+  right: 30px;
+  cursor: pointer;
+  margin-bottom: 2px;
+  visibility: hidden;
+}

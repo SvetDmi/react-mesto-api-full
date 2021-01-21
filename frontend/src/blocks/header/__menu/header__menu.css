@@ -1,0 +1,10 @@
+.header__menu {
+  display: flex;
+}
+
+@media all and (max-width: 410px) {
+  .header__menu {
+    position: absolute;
+    visibility: hidden;
+  }
+}
