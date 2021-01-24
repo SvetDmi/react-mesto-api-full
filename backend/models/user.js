@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcrypt');
 const regex = /^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i;
 
 
@@ -20,12 +21,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator(v) {
-        return regexLink.test(v)
-      },
       // validator(v) {
-      //   return validator.isURL(v);
+      //   return regexLink.test(v)
       // },
+      validator(v) {
+        return validator.isURL(v);
+      },
       message: 'Не получается загрузить аватар, проверьте правильность ссылки',
     },
   },
@@ -38,7 +39,7 @@ const userSchema = new mongoose.Schema({
       validator(v) {
         return validator.isEmail(v);
       },
-      message: 'Неверный email',
+      message: 'Проверьте правильность введения электронной почты',
     },
   },
 
@@ -74,5 +75,7 @@ userSchema.statics.findUserByCredentials = function (email, password) {
         });
     });
 };
+
+
 
 module.exports = mongoose.model('user', userSchema);

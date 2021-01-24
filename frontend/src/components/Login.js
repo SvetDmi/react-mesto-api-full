@@ -1,11 +1,6 @@
 import { logDOM } from '@testing-library/react';
 import React from 'react';
 
-// "Файл logo.svg, который находится в директории components в вашем проекте (но здесь он не отображается), 
-// следует переместить в папку images" 
-// я переместила, но не поняла, почему это замечание было в компоненте Login и почему "не отображается"? У меня при открытии сайта 
-// логотип отображался везде
-
 function Login({ onLogin }) {
 
     const [email, setEmail] = React.useState('');

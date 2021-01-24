@@ -1,7 +1,7 @@
-const { error400, error404, error500 } = require('../errors/errorText');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
+const { NODE_ENV, JWT_SECRET } = process.env;
 const ErrorNotFound404 = require('../errors/ErrorNotFound404');
 const ErrorForbidden403 = require('../errors/ErrorForbidden403');
 const ErrorBadRequest400 = require('../errors/ErrorBadRequest400');
@@ -34,19 +34,24 @@ const getMe = (req, res, next) => {
 };
 
 
-const createUser = (req, res, next) => {
+const createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
-  bcrypt.hash(password, 8)
+  return bcrypt.hash(password, 10)
     .then(hash => User.create({ name, about, avatar, email, password: hash }))
     .then((user) => {
       if (!user) {
-        throw new ErrorBadRequest400('Проверьте правильность введенных данных');
+        throw new ErrorBadRequest401('Проверьте правильность введенных данных');
       }
-      res.status(201).send({ data: user })
+      res.status(201).send({
+        _id: user._id,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      })
     })
-    .catch(next);
-
-};
+    .catch((err) => res.status(409).send("Пользователь с этим email уже зарегистрирован"));
+}
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
@@ -63,15 +68,6 @@ const updateProfile = (req, res, next) => {
       res.status(201).send({ data: user })
     })
     .catch(next);
-
-  // .then((user) => {
-  //   if (err.name === 'ValidatorError') {
-  //     throw new ErrorBadRequest400('Проверьте правильность введенных данных');
-  //   }
-  //   res.status(200).send({ data: user })
-  // })
-  // .catch(next);
-
 };
 
 
@@ -89,29 +85,18 @@ const updateAvatar = (req, res, next) => {
       res.status(201).send({ data: user })
     })
     .catch(next);
-  // .then((user) => {
-  //   if (err.name === 'ValidatorError') {
-  //     throw new ErrorBadRequest400('Проверьте правильность введенных данных');
-  //   }
-  //   res.status(200).send({ data: user })
-  // })
-  // .catch(next);
 };
 
 const login = (req, res) => {
   const { email, password } = req.body;
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
-
-      const token = jwt.sign({ _id: user._id }, { expiresIn: '7d' });
-
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {
       res
-        .status(401)
-        .send({ message: err.message });
+        .status(401).send({ message: err.message });
     });
 };
 
