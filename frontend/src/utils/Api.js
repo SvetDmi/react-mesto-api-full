@@ -101,9 +101,8 @@ class Api {
 
 
 export const api = new Api({
-    url: 'https://mesto.nomoreparties.co/v1/cohort-16',
+    url: 'http://api.svetdmi.students.nomoredomains.rocks/',
     headers: {
-        authorization: '5e818745-1601-43fc-b5f2-fedadb1bc162',
         'Content-Type': 'application/json'
     }
 });

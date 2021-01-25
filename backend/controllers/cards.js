@@ -1,5 +1,3 @@
-const { error400, error404, error500 } = require('../errors/errorText');
-
 const Card = require('../models/card.js');
 const ErrorNotFound404 = require('../errors/ErrorNotFound404');
 const ErrorForbidden403 = require('../errors/ErrorForbidden403');

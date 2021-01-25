@@ -1,5 +1,4 @@
-export const BASE_URL = 'https://auth.nomoreparties.co';
-
+export const BASE_URL = 'http://api.svetdmi.students.nomoredomains.rocks/';
 
 export const headers = {
     'Content-Type': 'application/json'
