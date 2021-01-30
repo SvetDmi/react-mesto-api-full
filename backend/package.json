@@ -29,13 +29,5 @@
     "mongoose": "^5.11.5",
     "validator": "^13.5.2",
     "winston": "^3.3.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SvetDmi/express-mesto.git"
-  },
-  "bugs": {
-    "url": "https://github.com/SvetDmi/express-mesto/issues"
-  },
-  "homepage": "https://github.com/SvetDmi/express-mesto#readme"
+  }
 }
