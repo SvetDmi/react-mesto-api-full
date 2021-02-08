@@ -23,13 +23,13 @@ const validateAvatar = celebrate({
 const validateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().regex(/^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i),
+    link: Joi.string().required().pattern(/^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i),
   })
 });
 
 const validateId = celebrate({
-  body: Joi.object().keys({
-    _id: Joi.string().alphanum().length(24),
+  params: Joi.object().keys({
+    id: Joi.string().alphanum().length(24),
   })
 });
 
