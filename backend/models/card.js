@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return regexLink.test(v);
+        return regex.test(v);
       },
       message: 'Не получается загрузить карточку, проверьте правильность ссылки',
     },
