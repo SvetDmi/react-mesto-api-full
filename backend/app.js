@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
@@ -16,8 +18,6 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 const app = express();
 
-app.use(cors());
-
 mongoose.connect(MONGO_URL, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -25,10 +25,18 @@ mongoose.connect(MONGO_URL, {
   useUnifiedTopology: true,
 });
 
-
+app.use(cors());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, //
+  max: 100 //
+});
+app.use(limiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
