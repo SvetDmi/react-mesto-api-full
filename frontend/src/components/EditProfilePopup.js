@@ -23,12 +23,12 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isLoading, name, desc
             onSubmit={handleSubmit}
             isLoading={isLoading}
         >
-            <input id="input-name" type="text" name="name" value={name || ""} placeholder='Имя'
+            <input type="text" name="name" value={name || ""} placeholder='Имя'
                 className="popup__input popup__input_subject_name" required minLength="2" maxLength="40" onChange={onNameChange} />
-            <span id="input-name-error" className="popup__input-error"></span>
-            <input id="input-job" type="text" name="about" value={description || ""} placeholder='О себе'
+            <span className="popup__input-error"></span>
+            <input type="text" name="about" value={description || ""} placeholder='О себе'
                 className="popup__input popup__input_subject_job" required minLength="2" maxLength="200" onChange={onDescriptionChange} />
-            <span id="input-job-error" className="popup__input-error"></span>
+            <span className="popup__input-error"></span>
         </PopupWithForm>
 
     );

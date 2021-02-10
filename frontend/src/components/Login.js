@@ -24,12 +24,12 @@ function Login({ onLogin }) {
             <h2 className="auth__title">Вход</h2>
             <form className="auth__form" method="post" noValidate onSubmit={handleSubmit}>
 
-                <input id="input-email" type="email" autoComplete="username" name="email" value={email || ""} placeholder='Email'
+                <input type="email" autoComplete="username" name="email" value={email || ""} placeholder='Email'
                     className="auth__input" required onChange={onEmailChange} />
-                <span id="input-name-error" className="popup__input-error"></span>
-                <input id="input-password" type="password" autoComplete="current-password" name="password" value={password || ""} placeholder='Пароль'
+                <span className="popup__input-error"></span>
+                <input type="password" autoComplete="current-password" name="password" value={password || ""} placeholder='Пароль'
                     className="auth__input" required onChange={onPasswordChange} />
-                <span id="input-job-error" className="popup__input-error"></span>
+                <span className="popup__input-error"></span>
                 <button type="submit" className="auth__submit">Войти</button>
             </form>
 
