@@ -1,3 +1,5 @@
+import { BASE_URL, headers } from './auth';
+
 class Api {
     constructor({ url, headers }) {
         this._url = url
@@ -101,8 +103,6 @@ class Api {
 
 
 export const api = new Api({
-    url: 'http://api.svetdmi.students.nomoredomains.rocks/',
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    url: BASE_URL,
+    headers: headers
 });
