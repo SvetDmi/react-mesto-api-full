@@ -6,7 +6,7 @@ router.get('/users', getUsers);
 router.get('/users/:id', getUser);
 router.get('/users/me', getMe);
 
-router.post('/users', validateUser, createUser)
+router.post('/users', validateUser, createUser);
 
 
 router.patch('/users/me', validateProfile, updateProfile);

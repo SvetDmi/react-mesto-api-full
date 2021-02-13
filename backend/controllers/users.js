@@ -12,24 +12,21 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const getUser = (req, res, next) =>
+const getUser = (req, res, next) => {
   User.findById(req.params.id)
-    .then((user) => {
-      if (!user) {
-        throw new ErrorNotFound404('Нет пользователя с таким id');
-      }
-      res.status(200).send({ data: user })
+    .orFail(() => {
+      throw new ErrorNotFound404('Нет такого пользователя');
     })
+    .then((user) => res.status(200).send({ data: user }))
     .catch(next);
+};
 
 const getMe = (req, res, next) => {
-  User.findOne(req.user._id)
-    .then((user) => {
-      if (!user) {
-        throw new ErrorForbidden403('Доступ запрещен. Авторизуйтесь на сайте');
-      }
-      res.status(200).send({ data: user })
+  User.findById(req.user._id)
+    .orFail(() => {
+      throw new ErrorNotFound404('Нет такого пользователя');
     })
+    .then((user) => res.status(200).send({ data: user }))
     .catch(next);
 };
 

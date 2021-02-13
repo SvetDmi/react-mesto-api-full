@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema({
       validator(v) {
         return validator.isStrongPassword(v);
       },
-      message: 'Введите пароль минимум из 8 знаков, включащий в себя цифру, знак, большие и маленькие буквы'
+      message: 'Введите пароль минимум из 8 символов, включащий в себя цифру, знак, большие и маленькие буквы'
     },
   },
 

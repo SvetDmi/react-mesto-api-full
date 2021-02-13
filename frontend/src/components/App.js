@@ -193,15 +193,15 @@ function App() {
     const history = useHistory();
 
     const tokenCheck = () => {
-        const jwt = localStorage.getItem('jwt');
-        if (jwt) {
-            auth.checkToken(jwt).then((res) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            auth.checkToken(token).then((res) => {
                 if (res) {
                     setLoggedIn(true)
                     setEmail(res.data.email)
-
+                    history.push('/');
                 }
-                history.push('/');
+
             })
                 .catch((err) => console.log(err))
         }
@@ -214,11 +214,11 @@ function App() {
     function onRegister(email, password) {
         return auth.register(email, password)
             .then((res) => {
-                if (res.data) {
+                if (res) {
                     setAuthResult(true);
                     setMessage('Вы успешно зарегистрировались!');
                     setIsInfoTooltipPopupOpen(true);
-                    history.push('/sign-in');
+                    history.push('/signin');
                 }
                 else {
                     setAuthResult(false);
@@ -250,10 +250,10 @@ function App() {
     }
 
     function onLogout() {
-        localStorage.removeItem('jwt');
+        localStorage.removeItem('token');
         setLoggedIn(false);
         setEmail('');
-        history.push('/sign-in');
+        history.push('/signin');
     }
 
 
@@ -302,19 +302,34 @@ function App() {
 
     // Возврат
     return (
-        <div className="page">
-            <CurrentUserContext.Provider value={currentUser}>
+        <CurrentUserContext.Provider value={currentUser}>
+            <div className="page">
 
                 <div className="App">
                     <Header
                         email={email}
                         onLogout={onLogout}
                         isLogged={loggedIn}
-
                     />
+
                     <Switch>
-                        <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+                        {/* <ProtectedRoute exact path="/"
+                            loggedIn={loggedIn}
+                            component={Main}
+                            cards={cards}
+                            onEditProfile={handleEditProfileClick}
+                            onAddPlace={handleAddPlaceClick}
+                            onEditAvatar={handleEditAvatarClick}
+                            onCardClick={handleCardClick}
+                            onCardLike={handleCardLike}
+                            onCardDelete={handleCardDeleteRequest}
+                        >
+
+                        </ProtectedRoute> */}
+
+                        <ProtectedRoute exact path="/cards" loggedIn={loggedIn}>
                             <Main
+
                                 onEditProfile={handleEditProfileClick}
                                 onAddPlace={handleAddPlaceClick}
                                 onEditAvatar={handleEditAvatarClick}
@@ -322,18 +337,21 @@ function App() {
                                 onCardLike={handleCardLike}
                                 onCardDelete={handleCardDeleteRequest}
                                 cards={cards}
+
                             />
                             <Footer />
 
                         </ProtectedRoute>
 
-                        <Route exact path="/sign-up">
+
+
+                        <Route path="/signup">
                             <Register
                                 onRegister={onRegister}
                             />
                         </Route>
 
-                        <Route path="/sign-in">
+                        <Route path="/signin">
                             <Login
                                 onLogin={onLogin}
                             />
@@ -341,7 +359,7 @@ function App() {
 
 
                         <Route>
-                            {loggedIn ? <Redirect to='/' /> : <Redirect to='/sign-in' />}
+                            {loggedIn ? <Redirect to='/cards' /> : <Redirect to='/signin' />}
                         </Route>
 
                     </Switch>
@@ -403,11 +421,11 @@ function App() {
                     ></InfoTooltip>
 
                 </div>
+            </div>
+
+        </CurrentUserContext.Provider>
 
 
-            </CurrentUserContext.Provider>
-
-        </div>
     )
 }
 

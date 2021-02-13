@@ -4,22 +4,21 @@ import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main({
+
     onEditProfile,
     onAddPlace,
     onEditAvatar,
     onCardClick,
     onCardLike,
     onCardDelete,
-    cards
+    cards,
+
 
 }) {
     const currentUser = React.useContext(CurrentUserContext);
 
-
-
     return (
         <main>
-
             <section className="profile page__sections">
                 <img src={currentUser.avatar} alt={currentUser.name} className="profile__avatar" />
                 <button type="button" className="button profile__avatar_edit" onClick={onEditAvatar}></button>

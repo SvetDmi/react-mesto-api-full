@@ -1,4 +1,9 @@
-import { BASE_URL, headers } from './auth';
+import { BASE_URL } from './auth';
+
+const headers = {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+};
 
 class Api {
     constructor({ url, headers }) {
@@ -10,7 +15,7 @@ class Api {
         if (res.ok) {
             return res.json();
         }
-        return Promise.reject(new Error(`Ошибка: ${res.status}`));
+        return Promise.reject(`Ошибка: ${res.status}`);
     }
 
 
@@ -28,6 +33,7 @@ class Api {
     // 2. Загрузка карточек с сервера
     getInitialCards() {
         return fetch(`${this._url}/cards`, {
+            method: "GET",
             headers: this._headers
         })
             .then(this._parsAnswer)
@@ -106,3 +112,4 @@ export const api = new Api({
     url: BASE_URL,
     headers: headers
 });
+

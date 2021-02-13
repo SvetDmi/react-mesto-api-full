@@ -18,16 +18,16 @@ function Header({ email, onLogout, isLogged }) {
 
         <header className={`page__sections ${isLogged ? 'header-auth' : 'header'}`}>
             <Switch>
-                <Route path="/sign-in">
-                    <Link to="./sign-up" className="header__link">Регистрация</Link>
+                <Route path="/signin">
+                    <Link to="./signup" className="header__link">Регистрация</Link>
                 </Route>
-                <Route path="/sign-up">
-                    <Link to="./sign-in" className="header__link">Войти</Link>
+                <Route path="/signup">
+                    <Link to="./signin" className="header__link">Войти</Link>
                 </Route>
                 <Route path="/">
                     <div className={`${isNaviconClick ? 'header__menu-mobile' : 'header__menu '}`}>
                         <p className="header__email" >{email}</p>
-                        <Link to="./sign-in" onClick={onLogout} className="header__link header__link_out">Выйти</Link>
+                        <Link to="./signin" onClick={onLogout} className="header__link header__link_out">Выйти</Link>
                     </div>
 
                     <button onClick={openMenu} className={`button header__menu-pic ${isNaviconClick ? '' : 'header__menu-pic_type_open'}`}>

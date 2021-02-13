@@ -1,6 +1,6 @@
-export const BASE_URL = 'http://api.svetdmi.students.nomoredomains.rocks/';
+export const BASE_URL = 'http://api.svetdmi.students.nomoredomains.rocks';
 
-export const headers = {
+const headers = {
     'Content-Type': 'application/json'
 };
 
@@ -10,13 +10,15 @@ export const register = (email, password) => {
         headers: headers,
         body: JSON.stringify({ email, password })
     })
-        .then((response) => {
-            return response.json();
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(res.status);
         })
         .then((res) => {
-            console.log(res);
             return res;
-        })
+        });
 };
 
 export const login = (email, password) => {
@@ -25,10 +27,17 @@ export const login = (email, password) => {
         headers: headers,
         body: JSON.stringify({ email, password })
     })
-        .then((response => response.json()))
+        // .then((res) => {
+        //     if (res.ok) {
+        //         return res.json();
+        //     }
+        //     return Promise.reject(res.status);
+        // })
+
+        .then(res => res.json())
         .then((data) => {
             if (data.token) {
-                localStorage.setItem('jwt', data.token);
+                localStorage.setItem('token', data.token);
                 return data;
             } else {
                 return;
@@ -45,6 +54,11 @@ export const checkToken = (token) => {
             'Authorization': `Bearer ${token}`,
         }
     })
-        .then(res => res.json())
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+            return Promise.reject(res.status);
+        })
         .then(data => data)
 };
