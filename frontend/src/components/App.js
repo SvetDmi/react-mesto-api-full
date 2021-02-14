@@ -316,7 +316,7 @@ function App() {
                         />
 
 
-                        {/* <ProtectedRoute exact path="/"
+                        <ProtectedRoute exact path="/cards"
                             loggedIn={loggedIn}
                             component={Main}
                             cards={cards}
@@ -328,9 +328,9 @@ function App() {
                             onCardDelete={handleCardDeleteRequest}
                         >
 
-                        </ProtectedRoute> */}
+                        </ProtectedRoute>
 
-                        <ProtectedRoute exact path="/cards" loggedIn={loggedIn}>
+                        {/* <ProtectedRoute exact path="/cards" loggedIn={loggedIn}>
                             <Main
 
                                 onEditProfile={handleEditProfileClick}
@@ -344,7 +344,7 @@ function App() {
                             />
                             <Footer />
 
-                        </ProtectedRoute>
+                        </ProtectedRoute> */}
 
 
 
