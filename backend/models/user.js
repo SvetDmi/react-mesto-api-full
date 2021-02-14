@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const isEmail = require('validator/lib/isEmail');
+const isURL = require('validator/lib/isURL');
 const bcrypt = require('bcrypt');
-const regex = /^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i;
 
 
 const userSchema = new mongoose.Schema({
@@ -20,27 +20,14 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    validate: {
-      // validator(v) {
-      //   return regexLink.test(v)
-      // },
-      validator(v) {
-        return validator.isURL(v);
-      },
-      message: 'Не получается загрузить аватар, проверьте правильность ссылки',
-    },
+    validate: isURL,
   },
 
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: {
-      validator(v) {
-        return validator.isEmail(v);
-      },
-      message: 'Проверьте правильность введения электронной почты',
-    },
+    validate: isEmail,
   },
 
   password: {
@@ -48,12 +35,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
     minlength: 8,
-    validate: {
-      validator(v) {
-        return validator.isStrongPassword(v);
-      },
-      message: 'Введите пароль минимум из 8 символов, включащий в себя цифру, знак, большие и маленькие буквы'
-    },
   },
 
 });

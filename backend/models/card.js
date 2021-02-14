@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const regex = /^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i;
+const isURL = require('validator/lib/isURL');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -11,12 +11,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validate: {
-      validator(v) {
-        return regex.test(v);
-      },
-      message: 'Не получается загрузить карточку, проверьте правильность ссылки',
-    },
+    validate: isURL,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

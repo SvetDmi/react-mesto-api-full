@@ -203,13 +203,16 @@ function App() {
                 }
 
             })
-                .catch((err) => console.log(err))
+                .catch(err => {
+                    console.log('Проблема с токеном');
+                    setLoggedIn(false);
+                });
         }
     };
 
     React.useEffect(() => {
         tokenCheck();
-    }, []);
+    }, [loggedIn]);
 
     function onRegister(email, password) {
         return auth.register(email, password)
@@ -239,10 +242,12 @@ function App() {
                     setMessage('Проверьте правильность введения email и пароля');
                     setIsInfoTooltipPopupOpen(true);
 
+
                 }
                 else {
                     localStorage.setItem('token', res.token);
                     tokenCheck();
+                    history.push('/');
 
                 }
             })

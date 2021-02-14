@@ -16,20 +16,20 @@ const validateProfile = celebrate({
 
 const validateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().regex(/^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i),
+    avatar: Joi.string().required()
   }),
 });
 
 const validateCard = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(/^(https?:\/\/)(www\.)?([\w\-\.]+)\.([a-z]{2,6}\.?)(\/[\w\-\.]*)*\/?$/i),
+    link: Joi.string().required()
   })
 });
 
 const validateId = celebrate({
   params: Joi.object().keys({
-    id: Joi.string().alphanum().length(24),
+    id: Joi.string().alphanum().length(24).id(),
   })
 });
 

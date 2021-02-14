@@ -6,7 +6,8 @@ const ErrorBadRequest400 = require('../errors/ErrorBadRequest400');
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  Card.create({ name, link, owner: req.user._id })
+  const owner = req.user.id;
+  Card.create({ name, link, owner })
     .then((newCard) => res.send(newCard))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -37,38 +38,39 @@ const getCard = (req, res, next) => {
 
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findById(req.params.id)
     .orFail(() => {
       throw new ErrorNotFound404('Карточка не найдена');
     })
     .then((card) => {
-      if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
+      if (card.owner.toString() !== req.user.id) {
         throw new ErrorForbidden403('Чужую карточку невозможно удалить');
       }
+      return Card.findByIdAndRemove(req.params.id);
     })
-    .then(() => {
-      res.status(200).send('Карточка удалена')
+    .then((card) => {
+      res.status(200).send("Карточка удалена")
     })
     .catch(next);
 
 };
 
-const updateLike = (req, res, method) => {
-  Card.findByIdAndUpdate(req.params.id, { [method]: { likes: req.user._id } },
+const updateLike = (req, res, next, method) => {
+  Card.findByIdAndUpdate(req.params.id, { [method]: { likes: req.user.id } },
     { new: true })
     .orFail(() => {
       throw new ErrorNotFound404('Карточка не найдена');
     })
-    .then((card) => {
-      res.status(201).send({ data: card })
+    .then((likes) => {
+      res.status(201).send({ data: likes })
     })
     .catch(next);
 }
 
-const putLike = (req, res) => updateLike(req, res, '#addToSet');
+const putLike = (req, res) => updateLike(req, res, next, '#addToSet');
 
 
-const deleteLike = (req, res) => updateLike(req, res, '$pull');
+const deleteLike = (req, res) => updateLike(req, res, next, '$pull');
 
 
 module.exports = { getCards, getCard, createCard, deleteCard, putLike, deleteLike };

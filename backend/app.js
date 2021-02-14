@@ -23,6 +23,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
+
 });
 
 app.use(cors());
@@ -32,11 +33,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, //
-  max: 100 //
-});
-app.use(limiter);
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, //
+//   max: 100 //
+// });
+// app.use(limiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -45,18 +46,21 @@ app.get('/crash-test', () => {
 });
 
 app.use('/', userAuth);
+
 app.use('/', auth, usersRouter);
 app.use('/', auth, cardsRouter);
+app.use('/', (req, res, next) => {
+  const error = new Error('Запрашиваемый ресурс не найден');
+  error.statusCode = 404;
+  next(error);
+});
 
 app.use(errorLogger);
 app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На сервере произошла ошибка' : message,
-  });
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
 
