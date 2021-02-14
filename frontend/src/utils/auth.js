@@ -1,6 +1,7 @@
 export const BASE_URL = 'http://api.svetdmi.students.nomoredomains.rocks';
 
 const headers = {
+    'Accept': 'application/json',
     'Content-Type': 'application/json'
 };
 
@@ -27,20 +28,17 @@ export const login = (email, password) => {
         headers: headers,
         body: JSON.stringify({ email, password })
     })
-        // .then((res) => {
-        //     if (res.ok) {
-        //         return res.json();
-        //     }
-        //     return Promise.reject(res.status);
-        // })
-
-        .then(res => res.json())
+        .then((res => {
+            let data = res.json();
+            if (!res.ok) {
+                return Promise.reject(res.status);
+            }
+            return data;
+        }))
         .then((data) => {
             if (data.token) {
                 localStorage.setItem('token', data.token);
                 return data;
-            } else {
-                return;
             }
         })
 };

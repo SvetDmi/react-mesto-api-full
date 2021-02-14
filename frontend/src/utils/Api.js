@@ -86,7 +86,7 @@ class Api {
 
     // 8. Постановка и снятие лайка
     changeLikeCardStatus(_id, isLiked) {
-        return fetch(`${this._url}/cards/likes/${_id}`, {
+        return fetch(`${this._url}/cards/${_id}/likes`, {
             method: `${isLiked ? 'PUT' : 'DELETE'}`,
             headers: this._headers
         })

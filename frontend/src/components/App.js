@@ -241,14 +241,11 @@ function App() {
                     setLoggedIn(false);
                     setMessage('Проверьте правильность введения email и пароля');
                     setIsInfoTooltipPopupOpen(true);
-
-
                 }
                 else {
                     localStorage.setItem('token', res.token);
                     tokenCheck();
                     history.push('/');
-
                 }
             })
             .catch((err) => console.log('Пользователь с таким email не найден'));
@@ -307,17 +304,18 @@ function App() {
 
     // Возврат
     return (
-        <CurrentUserContext.Provider value={currentUser}>
-            <div className="page">
+        <div className="page">
+            <div className="App">
+                <Switch>
+                    <CurrentUserContext.Provider value={currentUser}>
 
-                <div className="App">
-                    <Header
-                        email={email}
-                        onLogout={onLogout}
-                        isLogged={loggedIn}
-                    />
+                        <Header
+                            email={email}
+                            onLogout={onLogout}
+                            isLogged={loggedIn}
+                        />
 
-                    <Switch>
+
                         {/* <ProtectedRoute exact path="/"
                             loggedIn={loggedIn}
                             component={Main}
@@ -362,75 +360,68 @@ function App() {
                             />
                         </Route>
 
-
                         <Route>
                             {loggedIn ? <Redirect to='/cards' /> : <Redirect to='/signin' />}
                         </Route>
 
-                    </Switch>
+                        <EditProfilePopup
+                            isOpen={isEditProfilePopupOpen}
+                            onClose={closeAllPopups}
+                            onUpdateUser={handleUpdateUser}
+                            isLoading={isLoading}
+                            onNameChange={handleNameChange}
+                            onDescriptionChange={handleDescriptionChange}
+                            name={name}
+                            description={description}
+                        />
+
+                        <EditAvatarPopup
+                            isOpen={isEditAvatarPopupOpen}
+                            onClose={closeAllPopups}
+                            onUpdateAvatar={handleUpdateAvatar}
+                            isLoading={isLoading}
+                        />
+
+                        <AddPlacePopup
+                            isOpen={isAddPlacePopupOpen}
+                            onClose={closeAllPopups}
+                            onAddPlace={handleAddPlaceSubmit}
+                            isLoading={isLoading}
+                            onTitleChange={handleTitleChange}
+                            onLinkChange={handleLinkChange}
+                            name={title}
+                            link={link}
+                        />
+
+                        <PopupWithForm
+                            name="deleteCard"
+                            title="Вы уверены?"
+                            buttonText="Да"
+                            isOpen={isDeletePopupOpen}
+                            onClose={closeAllPopups}
+                            onSubmit={handleCardDelete}
+                        >
+                        </PopupWithForm>
 
 
+                        <ImagePopup
+                            card={selectedCardData}
+                            isOpen={isSelectedCardOpen}
+                            onClose={closeAllPopups}
 
-                    <EditProfilePopup
-                        isOpen={isEditProfilePopupOpen}
-                        onClose={closeAllPopups}
-                        onUpdateUser={handleUpdateUser}
-                        isLoading={isLoading}
-                        onNameChange={handleNameChange}
-                        onDescriptionChange={handleDescriptionChange}
-                        name={name}
-                        description={description}
-                    />
+                        ></ImagePopup>
 
-                    <EditAvatarPopup
-                        isOpen={isEditAvatarPopupOpen}
-                        onClose={closeAllPopups}
-                        onUpdateAvatar={handleUpdateAvatar}
-                        isLoading={isLoading}
-                    />
+                        <InfoTooltip
+                            isOpen={isInfoToolTipPopupOpen}
+                            onClose={closeAllPopups}
+                            authResult={isAuthResult}
+                            message={message}
+                        ></InfoTooltip>
 
-                    <AddPlacePopup
-                        isOpen={isAddPlacePopupOpen}
-                        onClose={closeAllPopups}
-                        onAddPlace={handleAddPlaceSubmit}
-                        isLoading={isLoading}
-                        onTitleChange={handleTitleChange}
-                        onLinkChange={handleLinkChange}
-                        name={title}
-                        link={link}
-                    />
-
-                    <PopupWithForm
-                        name="deleteCard"
-                        title="Вы уверены?"
-                        buttonText="Да"
-                        isOpen={isDeletePopupOpen}
-                        onClose={closeAllPopups}
-                        onSubmit={handleCardDelete}
-                    >
-                    </PopupWithForm>
-
-
-                    <ImagePopup
-                        card={selectedCardData}
-                        isOpen={isSelectedCardOpen}
-                        onClose={closeAllPopups}
-
-                    ></ImagePopup>
-
-                    <InfoTooltip
-                        isOpen={isInfoToolTipPopupOpen}
-                        onClose={closeAllPopups}
-                        authResult={isAuthResult}
-                        message={message}
-                    ></InfoTooltip>
-
-                </div>
+                    </CurrentUserContext.Provider>
+                </Switch>
             </div>
-
-        </CurrentUserContext.Provider>
-
-
+        </div >
     )
 }
 
