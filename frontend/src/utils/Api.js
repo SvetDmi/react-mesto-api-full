@@ -2,7 +2,8 @@ import { BASE_URL } from './auth';
 
 const headers = {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
 };
 
 class Api {
@@ -17,7 +18,6 @@ class Api {
         }
         return Promise.reject(`Ошибка: ${res.status}`);
     }
-
 
     // 1. Загрузка информации о пользователе с сервера
     getUserInfo() {
@@ -41,7 +41,6 @@ class Api {
         // console.log(res);
         //       })
     };
-
 
     getAllInfo() {
         return Promise.all([this.getInitialCards(), this.getUserInfo()])
@@ -83,7 +82,6 @@ class Api {
             .then(this._parsAnswer)
     }
 
-
     // 8. Постановка и снятие лайка
     changeLikeCardStatus(_id, isLiked) {
         return fetch(`${this._url}/cards/${_id}/likes`, {
@@ -92,7 +90,6 @@ class Api {
         })
             .then(this._parsAnswer)
     }
-
 
     // 9. Обновление аватара пользователя  
     editAvatar(inputData) {
@@ -106,7 +103,6 @@ class Api {
             .then(this._parsAnswer)
     }
 }
-
 
 export const api = new Api({
     url: BASE_URL,

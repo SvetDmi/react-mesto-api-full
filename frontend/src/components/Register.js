@@ -34,7 +34,6 @@ function Register({ onRegister }) {
             </form>
             <Link to="./sign-in" className="button auth__link">Уже зарегистрированы? Войти</Link>
         </div>
-
     )
 }
 

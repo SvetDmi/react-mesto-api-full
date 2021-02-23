@@ -1,5 +1,4 @@
 import React from 'react';
-// import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
@@ -28,14 +27,11 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, isLoading }) {
             onSubmit={handleSubmit}
             isLoading={isLoading}
         >
-
-
             <input ref={avatar} type="url" name="link" placeholder="Ссылка на картинку"
                 className="popup__input popup__input_subject_pic-link" required />
             <span className="popup__input-error"></span>
 
         </PopupWithForm >
-
     );
 }
 

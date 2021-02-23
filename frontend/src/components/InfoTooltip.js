@@ -13,9 +13,7 @@ function InfoTooltip({ isOpen, onClose, authResult, message }) {
                 ></div>
                 <h2 className="popup__title popup__title_infotooltip">{message}</h2>
             </div>
-
         </div>
-
     );
 }
 

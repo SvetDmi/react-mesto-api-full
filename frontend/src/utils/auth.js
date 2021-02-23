@@ -1,4 +1,5 @@
-export const BASE_URL = 'http://api.svetdmi.students.nomoredomains.rocks';
+export const BASE_URL = 'https://api.svetdmi.students.nomoredomains.rocks';
+// export const BASE_URL = 'http://localhost:3002';
 
 const headers = {
     'Accept': 'application/json',
@@ -12,15 +13,62 @@ export const register = (email, password) => {
         body: JSON.stringify({ email, password })
     })
         .then((res) => {
-            if (res.ok) {
-                return res.json();
+            let data = res.json();
+            if (!res.ok) {
+                return Promise.reject(res.status);
+
             }
-            return Promise.reject(res.status);
+            return data;
         })
-        .then((res) => {
-            return res;
-        });
+        .catch(err => console.log(err));
 };
+
+// export const register = (email, password) => {
+//     return fetch(`${BASE_URL}/signup`, {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ email, password })
+//     })
+//         .then(response => {
+//             let data = response.json();
+//             if (!response.ok) {
+//                 return Promise.reject(response.status);
+//             }
+//             console.log (data)
+//             return data;
+//         })
+// };
+
+// export const login = (email, password) => {
+//     return fetch(`${BASE_URL}/signin`, {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ email, password })
+//     })
+//         .then((response => {
+//             let data = response.json();
+//             if (!response.ok) {
+//                 return Promise.reject(response.status);
+//             }
+
+//             return data;
+//         }))
+//         .then((data) => {
+//             if (data.token) {
+
+//                 localStorage.setItem('token', data.token);
+//                 return data;
+//             }
+//             return data;
+
+//         })
+// };
 
 export const login = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
@@ -41,6 +89,7 @@ export const login = (email, password) => {
                 return data;
             }
         })
+        .catch(err => console.log(err))
 };
 
 export const checkToken = (token) => {
@@ -49,14 +98,10 @@ export const checkToken = (token) => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${token}`
         }
     })
-        .then((res) => {
-            if (res.ok) {
-                return res.json();
-            }
-            return Promise.reject(res.status);
-        })
+        .then(res => res.json())
         .then(data => data)
 };
+

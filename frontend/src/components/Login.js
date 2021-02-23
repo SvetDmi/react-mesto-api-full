@@ -8,7 +8,6 @@ function Login({ onLogin }) {
     function handleSubmit(e) {
         e.preventDefault();
         onLogin(email, password)
-
     }
 
     const onEmailChange = (e) => {
@@ -32,9 +31,7 @@ function Login({ onLogin }) {
                 <span className="popup__input-error"></span>
                 <button type="submit" className="auth__submit">Войти</button>
             </form>
-
         </div>
-
     )
 }
 

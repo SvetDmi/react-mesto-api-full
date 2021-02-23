@@ -1,5 +1,4 @@
 import React from 'react';
-// import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, isLoading, name, description, onNameChange, onDescriptionChange }) {
@@ -30,7 +29,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, isLoading, name, desc
                 className="popup__input popup__input_subject_job" required minLength="2" maxLength="200" onChange={onDescriptionChange} />
             <span className="popup__input-error"></span>
         </PopupWithForm>
-
     );
 }
 

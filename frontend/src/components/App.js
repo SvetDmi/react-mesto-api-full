@@ -9,7 +9,7 @@ import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import PopupWithForm from './PopupWithForm';
+import DeleteCardPopup from './DeleteCardPopup';
 import Register from './Register';
 import Login from './Login';
 
@@ -19,10 +19,7 @@ import InfoTooltip from './InfoTooltip';
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../utils/auth';
 
-
-
 function App() {
-
 
     // Стейты
     const [currentUser, setCurrentUser] = React.useState({});
@@ -40,11 +37,10 @@ function App() {
     const [isDeletePopupOpen, setIsDeletePopupOpen] = React.useState(false);
     const [isSelectedCardOpen, setIsSelestedCardOpen] = React.useState(false);
     const [selectedCardData, setSelectedCardData] = React.useState({});
-    const [cardForDelete, setCardForDelete] = React.useState({})
+
     const [isLoading, setLoading] = React.useState(false);
 
     const [loggedIn, setLoggedIn] = React.useState(false);
-
 
     const [isInfoToolTipPopupOpen, setIsInfoTooltipPopupOpen] = React.useState(false);
 
@@ -52,20 +48,90 @@ function App() {
     const [message, setMessage] = React.useState('');
     const [email, setEmail] = React.useState('');
 
+    // АВТОРИЗАЦИЯ
 
+    const history = useHistory();
+
+    const tokenCheck = () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            auth.checkToken(token).then((res) => {
+                if (res) {
+                    setLoggedIn(true)
+                    setEmail(res.email)
+                    history.push('/');
+                }
+            })
+                .catch(err => {
+                    console.log('Проблема с токеном' + err);
+                    // setLoggedIn(false);
+                });
+        }
+    };
+
+    React.useEffect(() => {
+        tokenCheck();
+    }, []);
+
+    function onRegister(email, password) {
+        return auth.register(email, password)
+            .then((res) => {
+                if (res) {
+                    setAuthResult(true);
+                    setMessage('Вы успешно зарегистрировались!');
+                    setIsInfoTooltipPopupOpen(true);
+                    history.push('/signin');
+                }
+                else {
+                    setAuthResult(false);
+                    setMessage('Что-то пошло не так! Попробуйте ещё раз');
+                    setIsInfoTooltipPopupOpen(true);
+                }
+            })
+            .catch((err) => console.log('некорректно заполнено одно из полей'));
+
+    }
+
+    function onLogin(email, password) {
+        return auth.login(email, password)
+            .then((res) => {
+                if (!res) {
+                    setLoggedIn(false);
+                    setMessage('Проверьте правильность введения email и пароля');
+                    setIsInfoTooltipPopupOpen(true);
+                }
+                else {
+                    localStorage.setItem('token', res.token);
+                    tokenCheck();
+
+                    history.push('/');
+                }
+            })
+            .catch((err) => console.log('Пользователь с таким email не найден'));
+    }
+
+    function onLogout() {
+        localStorage.removeItem('token');
+        setLoggedIn(false);
+        setEmail('');
+        history.push('/signin');
+    }
 
     // Загрузка данных
 
     React.useEffect(() => {
-        api.getAllInfo()
+        if (!loggedIn) {
+            return;
+        }
+        return api.getAllInfo()
             .then(([cardsData, userData]) => {
-                setCurrentUser(userData)
-                setCards(cardsData)
+                setCards(cardsData);
+                setCurrentUser(userData);
             })
             .catch((err) => {
                 console.log(err)
             });
-    }, []);
+    }, [loggedIn]);
 
     // Профиль
 
@@ -116,7 +182,6 @@ function App() {
 
     // КАРТОЧКИ
 
-
     function handleAddPlaceSubmit(cardsData) {
         setLoading(true)
         api.addCard(cardsData)
@@ -146,7 +211,6 @@ function App() {
         setLink(e.target.value);
     }
 
-
     // открыть из карточки попап с картинкой
 
     function handleCardClick(card) {
@@ -161,7 +225,7 @@ function App() {
     // поставить-удалить лайк
 
     function handleCardLike(card) {
-        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        const isLiked = card.likes.some(i => i === currentUser._id);
         api.changeLikeCardStatus(card._id, !isLiked)
             .then((newCard) => {
                 const newCards = cards.map((item) => item._id === card._id ? newCard : item);
@@ -172,99 +236,25 @@ function App() {
             });
     }
 
-    function handleCardDeleteRequest(card) {
-        setCardForDelete(card);
+    function handleCardDeleteRequest(cards) {
         setIsDeletePopupOpen(true);
+        setSelectedCardData(cards);
     }
 
-    function handleCardDelete(evt) {
-        evt.preventDefault();
-        api.deleteCard(cardForDelete._id)
+    function handleCardDelete(card) {
+        api.deleteCard(card._id)
             .then(() => {
-                const newCards = cards.filter((card) => card._id !== cardForDelete._id);
+                const newCards = cards.filter((c) => c._id !== card._id);
                 setCards(newCards);
                 setIsDeletePopupOpen(false);
             })
-            .catch(err => console.log(`При удалении карточки: ${err}`))
-    }
-
-    // АВТОРИЗАЦИЯ
-
-    const history = useHistory();
-
-    const tokenCheck = () => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            auth.checkToken(token).then((res) => {
-                if (res) {
-                    setLoggedIn(true)
-                    setEmail(res.data.email)
-                    history.push('/');
-                }
-
+            .catch(err => {
+                console.log(`При удалении карточки: ${err}`)
             })
-                .catch(err => {
-                    console.log('Проблема с токеном');
-                    setLoggedIn(false);
-                });
-        }
-    };
-
-    React.useEffect(() => {
-        tokenCheck();
-    }, [loggedIn]);
-
-    function onRegister(email, password) {
-        return auth.register(email, password)
-            .then((res) => {
-                if (res) {
-                    setAuthResult(true);
-                    setMessage('Вы успешно зарегистрировались!');
-                    setIsInfoTooltipPopupOpen(true);
-                    history.push('/signin');
-                }
-                else {
-                    setAuthResult(false);
-                    setMessage('Что-то пошло не так! Попробуйте ещё раз');
-                    setIsInfoTooltipPopupOpen(true);
-                }
-            })
-            .catch((err) => console.log('некорректно заполнено одно из полей'));
-
     }
-
-
-    function onLogin(email, password) {
-        return auth.login(email, password)
-            .then((res) => {
-                if (!res) {
-                    setLoggedIn(false);
-                    setMessage('Проверьте правильность введения email и пароля');
-                    setIsInfoTooltipPopupOpen(true);
-                }
-                else {
-                    localStorage.setItem('token', res.token);
-                    tokenCheck();
-                    history.push('/');
-                }
-            })
-            .catch((err) => console.log('Пользователь с таким email не найден'));
-    }
-
-    function onLogout() {
-        localStorage.removeItem('token');
-        setLoggedIn(false);
-        setEmail('');
-        history.push('/signin');
-    }
-
 
     // ПОПАПЫ
 
-    // состояние попапов
-
-
-    //Обработчики попапов
     function handleEditAvatarClick() {
         setIsEditAvatarPopupOpen(true);
     }
@@ -285,7 +275,6 @@ function App() {
         setIsDeletePopupOpen(false);
         setIsInfoTooltipPopupOpen(false);
         setSelectedCardData({});
-        setCardForDelete(undefined);
     }
 
     React.useEffect(() => {
@@ -300,53 +289,18 @@ function App() {
         }
     }, [])
 
-
-
     // Возврат
+
     return (
         <div className="page">
             <div className="App">
                 <Switch>
                     <CurrentUserContext.Provider value={currentUser}>
-
                         <Header
                             email={email}
                             onLogout={onLogout}
                             isLogged={loggedIn}
                         />
-
-
-                        <ProtectedRoute exact path="/cards"
-                            loggedIn={loggedIn}
-                            component={Main}
-                            cards={cards}
-                            onEditProfile={handleEditProfileClick}
-                            onAddPlace={handleAddPlaceClick}
-                            onEditAvatar={handleEditAvatarClick}
-                            onCardClick={handleCardClick}
-                            onCardLike={handleCardLike}
-                            onCardDelete={handleCardDeleteRequest}
-                        >
-
-                        </ProtectedRoute>
-
-                        {/* <ProtectedRoute exact path="/cards" loggedIn={loggedIn}>
-                            <Main
-
-                                onEditProfile={handleEditProfileClick}
-                                onAddPlace={handleAddPlaceClick}
-                                onEditAvatar={handleEditAvatarClick}
-                                onCardClick={handleCardClick}
-                                onCardLike={handleCardLike}
-                                onCardDelete={handleCardDeleteRequest}
-                                cards={cards}
-
-                            />
-                            <Footer />
-
-                        </ProtectedRoute> */}
-
-
 
                         <Route path="/signup">
                             <Register
@@ -361,8 +315,22 @@ function App() {
                         </Route>
 
                         <Route>
-                            {loggedIn ? <Redirect to='/cards' /> : <Redirect to='/signin' />}
+                            {loggedIn ? <Redirect to='/' /> : <Redirect to='/signin' />}
                         </Route>
+
+                        <ProtectedRoute exact path="/" loggedIn={loggedIn}>
+                            <Main
+                                cards={cards}
+                                onEditProfile={handleEditProfileClick}
+                                onAddPlace={handleAddPlaceClick}
+                                onEditAvatar={handleEditAvatarClick}
+                                onCardClick={handleCardClick}
+                                onCardLike={handleCardLike}
+                                onCardDelete={handleCardDeleteRequest}
+
+                            />
+                            <Footer />
+                        </ProtectedRoute>
 
                         <EditProfilePopup
                             isOpen={isEditProfilePopupOpen}
@@ -393,22 +361,19 @@ function App() {
                             link={link}
                         />
 
-                        <PopupWithForm
-                            name="deleteCard"
-                            title="Вы уверены?"
-                            buttonText="Да"
+                        <DeleteCardPopup
+                            card={selectedCardData}
                             isOpen={isDeletePopupOpen}
                             onClose={closeAllPopups}
-                            onSubmit={handleCardDelete}
+                            onCardDelete={handleCardDelete}
                         >
-                        </PopupWithForm>
+                        </DeleteCardPopup>
 
 
                         <ImagePopup
                             card={selectedCardData}
                             isOpen={isSelectedCardOpen}
                             onClose={closeAllPopups}
-
                         ></ImagePopup>
 
                         <InfoTooltip
@@ -419,11 +384,11 @@ function App() {
                         ></InfoTooltip>
 
                     </CurrentUserContext.Provider>
+
                 </Switch>
             </div>
-        </div >
+        </div>
     )
 }
-
 
 export default App;

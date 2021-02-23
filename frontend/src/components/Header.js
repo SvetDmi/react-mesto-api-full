@@ -15,7 +15,6 @@ function Header({ email, onLogout, isLogged }) {
     }
 
     return (
-
         <header className={`page__sections ${isLogged ? 'header-auth' : 'header'}`}>
             <Switch>
                 <Route path="/signin">
@@ -35,16 +34,10 @@ function Header({ email, onLogout, isLogged }) {
                     <button onClick={closeMenu}
                         className={`button header__menu-pic ${isNaviconClick ? 'header__menu-pic_type_close' : ''}`}>
                     </button>
-
                 </Route>
-
             </Switch>
             <img src={logo} alt="Mesto Russia" className='header__logo' />
-
-
-
         </header>
-
     );
 }
 

@@ -36,5 +36,4 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, isLoading, onTitleChange, 
     );
 }
 
-
 export default AddPlacePopup;
