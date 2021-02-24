@@ -27,24 +27,26 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 
-const options = {
-  origin: [
-    'http://localhost:8080',
-    'http://localhost:27017',
-    'http://localhost:3000',
-    'http://localhost:3002',
-    'https://svetdmi.students.nomoredomains.rocks/',
-    'https://api.svetdmi.students.nomoredomains.rocks/',
-    'https://github.com/SvetDmi',
-  ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-  credentials: true,
-};
+// const options = {
+//   origin: [
+//     'http://localhost:8080',
+//     'http://localhost:27017',
+//     'http://localhost:3000',
+//     'http://localhost:3002',
+//     'https://svetdmi.students.nomoredomains.rocks/',
+//     'https://api.svetdmi.students.nomoredomains.rocks/',
+//     'https://github.com/SvetDmi',
+//   ],
+//   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204,
+//   allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+//   credentials: true,
+// };
 
-app.use('*', cors(options));
+// app.use('*', cors(options));
+
+app.use(cors());
 
 app.use(helmet());
 app.use(bodyParser.json());
