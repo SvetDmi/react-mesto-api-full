@@ -43,7 +43,7 @@ class Api {
     };
 
     getAllInfo() {
-        return Promise.all([this.getInitialCards(), this.getUserInfo()])
+        return Promise.all([this.getUserInfo(), this.getInitialCards()])
     }
 
     // 3. Редактирование профиля

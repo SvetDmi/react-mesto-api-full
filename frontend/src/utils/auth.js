@@ -23,53 +23,6 @@ export const register = (email, password) => {
         .catch(err => console.log(err));
 };
 
-// export const register = (email, password) => {
-//     return fetch(`${BASE_URL}/signup`, {
-//         method: 'POST',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ email, password })
-//     })
-//         .then(response => {
-//             let data = response.json();
-//             if (!response.ok) {
-//                 return Promise.reject(response.status);
-//             }
-//             console.log (data)
-//             return data;
-//         })
-// };
-
-// export const login = (email, password) => {
-//     return fetch(`${BASE_URL}/signin`, {
-//         method: 'POST',
-//         headers: {
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ email, password })
-//     })
-//         .then((response => {
-//             let data = response.json();
-//             if (!response.ok) {
-//                 return Promise.reject(response.status);
-//             }
-
-//             return data;
-//         }))
-//         .then((data) => {
-//             if (data.token) {
-
-//                 localStorage.setItem('token', data.token);
-//                 return data;
-//             }
-//             return data;
-
-//         })
-// };
-
 export const login = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
         method: 'POST',
@@ -103,5 +56,6 @@ export const checkToken = (token) => {
     })
         .then(res => res.json())
         .then(data => data)
+
 };
 

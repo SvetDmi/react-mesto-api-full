@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import Header from './Header';
@@ -59,12 +58,13 @@ function App() {
                 if (res) {
                     setLoggedIn(true)
                     setEmail(res.email)
-                    history.push('/');
+
+                    // history.push('/');
                 }
             })
                 .catch(err => {
                     console.log('Проблема с токеном' + err);
-                    // setLoggedIn(false);
+                    setLoggedIn(false);
                 });
         }
     };
@@ -73,6 +73,7 @@ function App() {
         tokenCheck();
     }, []);
 
+
     function onRegister(email, password) {
         return auth.register(email, password)
             .then((res) => {
@@ -80,6 +81,7 @@ function App() {
                     setAuthResult(true);
                     setMessage('Вы успешно зарегистрировались!');
                     setIsInfoTooltipPopupOpen(true);
+
                     history.push('/signin');
                 }
                 else {
@@ -88,7 +90,7 @@ function App() {
                     setIsInfoTooltipPopupOpen(true);
                 }
             })
-            .catch((err) => console.log('некорректно заполнено одно из полей'));
+            .catch((err) => console.log('Некорректно заполнено одно из полей'));
 
     }
 
@@ -101,9 +103,8 @@ function App() {
                     setIsInfoTooltipPopupOpen(true);
                 }
                 else {
-                    localStorage.setItem('token', res.token);
                     tokenCheck();
-
+                    localStorage.setItem('token', res.token);
                     history.push('/');
                 }
             })
@@ -124,14 +125,32 @@ function App() {
             return;
         }
         return api.getAllInfo()
-            .then(([cardsData, userData]) => {
-                setCards(cardsData);
+            .then(([userData, cardsData]) => {
                 setCurrentUser(userData);
+                setCards(cardsData);
+                console.log([userData])
             })
+
             .catch((err) => {
                 console.log(err)
             });
     }, [loggedIn]);
+
+
+    // const getAllInfo = async () => {
+    //     try {
+    //         const [userInfo, cards] = await Promise.all([api.getUserInfo(), api.getInitialCards()]);
+    //         setCards(cards);
+    //         setCurrentUser(userInfo);
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
+
+    // React.useEffect(() => {
+    //     if (!loggedIn) return;
+    //     getAllInfo();
+    // }, [loggedIn]);
 
     // Профиль
 
@@ -167,10 +186,11 @@ function App() {
             })
     }
 
+
     React.useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about);
-    }, [currentUser]);
+    }, [isEditProfilePopupOpen]);
 
     function handleNameChange(e) {
         setName(e.target.value);
@@ -294,19 +314,14 @@ function App() {
     return (
         <div className="page">
             <div className="App">
-                <Switch>
-                    <CurrentUserContext.Provider value={currentUser}>
-                        <Header
-                            email={email}
-                            onLogout={onLogout}
-                            isLogged={loggedIn}
-                        />
 
-                        <Route path="/signup">
-                            <Register
-                                onRegister={onRegister}
-                            />
-                        </Route>
+                <CurrentUserContext.Provider value={currentUser}>
+                    <Header
+                        email={email}
+                        onLogout={onLogout}
+                        isLogged={loggedIn}
+                    />
+                    <Switch>
 
                         <Route path="/signin">
                             <Login
@@ -314,8 +329,10 @@ function App() {
                             />
                         </Route>
 
-                        <Route>
-                            {loggedIn ? <Redirect to='/' /> : <Redirect to='/signin' />}
+                        <Route path="/signup">
+                            <Register
+                                onRegister={onRegister}
+                            />
                         </Route>
 
                         <ProtectedRoute exact path="/" loggedIn={loggedIn}>
@@ -327,65 +344,70 @@ function App() {
                                 onCardClick={handleCardClick}
                                 onCardLike={handleCardLike}
                                 onCardDelete={handleCardDeleteRequest}
-
                             />
-                            <Footer />
+
                         </ProtectedRoute>
+                        <Footer />
+                    </Switch>
 
-                        <EditProfilePopup
-                            isOpen={isEditProfilePopupOpen}
-                            onClose={closeAllPopups}
-                            onUpdateUser={handleUpdateUser}
-                            isLoading={isLoading}
-                            onNameChange={handleNameChange}
-                            onDescriptionChange={handleDescriptionChange}
-                            name={name}
-                            description={description}
-                        />
+                    <EditProfilePopup
+                        isOpen={isEditProfilePopupOpen}
+                        onClose={closeAllPopups}
+                        onUpdateUser={handleUpdateUser}
+                        isLoading={isLoading}
+                        onNameChange={handleNameChange}
+                        onDescriptionChange={handleDescriptionChange}
+                        name={name}
+                        description={description}
+                    />
 
-                        <EditAvatarPopup
-                            isOpen={isEditAvatarPopupOpen}
-                            onClose={closeAllPopups}
-                            onUpdateAvatar={handleUpdateAvatar}
-                            isLoading={isLoading}
-                        />
+                    <EditAvatarPopup
+                        isOpen={isEditAvatarPopupOpen}
+                        onClose={closeAllPopups}
+                        onUpdateAvatar={handleUpdateAvatar}
+                        isLoading={isLoading}
+                    />
 
-                        <AddPlacePopup
-                            isOpen={isAddPlacePopupOpen}
-                            onClose={closeAllPopups}
-                            onAddPlace={handleAddPlaceSubmit}
-                            isLoading={isLoading}
-                            onTitleChange={handleTitleChange}
-                            onLinkChange={handleLinkChange}
-                            name={title}
-                            link={link}
-                        />
+                    <AddPlacePopup
+                        isOpen={isAddPlacePopupOpen}
+                        onClose={closeAllPopups}
+                        onAddPlace={handleAddPlaceSubmit}
+                        isLoading={isLoading}
+                        onTitleChange={handleTitleChange}
+                        onLinkChange={handleLinkChange}
+                        name={title}
+                        link={link}
+                    />
 
-                        <DeleteCardPopup
-                            card={selectedCardData}
-                            isOpen={isDeletePopupOpen}
-                            onClose={closeAllPopups}
-                            onCardDelete={handleCardDelete}
-                        >
-                        </DeleteCardPopup>
+                    <DeleteCardPopup
+                        card={selectedCardData}
+                        isOpen={isDeletePopupOpen}
+                        onClose={closeAllPopups}
+                        onCardDelete={handleCardDelete}
+                    >
+                    </DeleteCardPopup>
 
 
-                        <ImagePopup
-                            card={selectedCardData}
-                            isOpen={isSelectedCardOpen}
-                            onClose={closeAllPopups}
-                        ></ImagePopup>
+                    <ImagePopup
+                        card={selectedCardData}
+                        isOpen={isSelectedCardOpen}
+                        onClose={closeAllPopups}
+                    ></ImagePopup>
 
-                        <InfoTooltip
-                            isOpen={isInfoToolTipPopupOpen}
-                            onClose={closeAllPopups}
-                            authResult={isAuthResult}
-                            message={message}
-                        ></InfoTooltip>
+                    <InfoTooltip
+                        isOpen={isInfoToolTipPopupOpen}
+                        onClose={closeAllPopups}
+                        authResult={isAuthResult}
+                        message={message}
+                    ></InfoTooltip>
 
-                    </CurrentUserContext.Provider>
+                    <Route >
+                        {loggedIn ? <Redirect to='/' /> : <Redirect to='/signin' />}
+                    </Route>
 
-                </Switch>
+                </CurrentUserContext.Provider>
+
+
             </div>
         </div>
     )
