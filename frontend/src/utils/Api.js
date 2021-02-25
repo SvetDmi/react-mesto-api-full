@@ -102,6 +102,10 @@ class Api {
         })
             .then(this._parsAnswer)
     }
+
+    refreshHeaders() {
+        headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    }
 }
 
 export const api = new Api({

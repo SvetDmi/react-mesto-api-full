@@ -23,8 +23,9 @@ function App() {
     // Стейты
     const [currentUser, setCurrentUser] = React.useState({});
     const [cards, setCards] = React.useState([]);
-    const [name, setName] = React.useState('');
+    const [selectedCardData, setSelectedCardData] = React.useState({});
 
+    const [name, setName] = React.useState('');
     const [description, setDescription] = React.useState('');
 
     const [title, setTitle] = React.useState('');
@@ -35,15 +36,12 @@ function App() {
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
     const [isDeletePopupOpen, setIsDeletePopupOpen] = React.useState(false);
     const [isSelectedCardOpen, setIsSelestedCardOpen] = React.useState(false);
-    const [selectedCardData, setSelectedCardData] = React.useState({});
-
-    const [isLoading, setLoading] = React.useState(false);
-
-    const [loggedIn, setLoggedIn] = React.useState(false);
-
     const [isInfoToolTipPopupOpen, setIsInfoTooltipPopupOpen] = React.useState(false);
 
+    const [isLoading, setLoading] = React.useState(false);
+    const [loggedIn, setLoggedIn] = React.useState(false);
     const [isAuthResult, setAuthResult] = React.useState(false);
+
     const [message, setMessage] = React.useState('');
     const [email, setEmail] = React.useState('');
 
@@ -58,8 +56,6 @@ function App() {
                 if (res) {
                     setLoggedIn(true)
                     setEmail(res.email)
-
-                    // history.push('/');
                 }
             })
                 .catch(err => {
@@ -81,7 +77,6 @@ function App() {
                     setAuthResult(true);
                     setMessage('Вы успешно зарегистрировались!');
                     setIsInfoTooltipPopupOpen(true);
-
                     history.push('/signin');
                 }
                 else {
@@ -98,13 +93,13 @@ function App() {
         return auth.login(email, password)
             .then((res) => {
                 if (!res) {
-                    setLoggedIn(false);
                     setMessage('Проверьте правильность введения email и пароля');
                     setIsInfoTooltipPopupOpen(true);
                 }
                 else {
-                    tokenCheck();
                     localStorage.setItem('token', res.token);
+                    tokenCheck();
+                    api.refreshHeaders();
                     history.push('/');
                 }
             })
@@ -115,6 +110,7 @@ function App() {
         localStorage.removeItem('token');
         setLoggedIn(false);
         setEmail('');
+        api.refreshHeaders();
         history.push('/signin');
     }
 
@@ -135,22 +131,6 @@ function App() {
                 console.log(err)
             });
     }, [loggedIn]);
-
-
-    // const getAllInfo = async () => {
-    //     try {
-    //         const [userInfo, cards] = await Promise.all([api.getUserInfo(), api.getInitialCards()]);
-    //         setCards(cards);
-    //         setCurrentUser(userInfo);
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
-
-    // React.useEffect(() => {
-    //     if (!loggedIn) return;
-    //     getAllInfo();
-    // }, [loggedIn]);
 
     // Профиль
 

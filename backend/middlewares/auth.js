@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const { ErrorUnauthorized401 } = require('../errors/index');
-// const jwtType = require('../config/config');
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports = (req, res, next) => {
@@ -14,7 +13,6 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    // payload = jwt.verify(token, jwtType);
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
     throw new ErrorUnauthorized401('Необходим токен для авторизации');
