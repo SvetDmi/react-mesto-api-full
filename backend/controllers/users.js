@@ -53,7 +53,7 @@ const updateProfile = (req, res, next) => {
       if (!user) {
         throw new ErrorBadRequest400('Проверьте правильность введенных данных');
       }
-      res.status(201).send(user)
+      res.status(200).send(user)
     })
     .catch(next);
 };
@@ -72,7 +72,7 @@ const updateAvatar = (req, res, next) => {
       if (!user) {
         throw new ErrorBadRequest400('Проверьте правильность введенных данных');
       }
-      res.status(201).send(user)
+      res.status(200).send(user)
     })
     .catch(next);
 };
