@@ -12,7 +12,6 @@
       }
         ],
     "no-console": "off",
-    "arrow-body-style": ["error", "as-needed"],
-    "allowElseIf": true
+    "arrow-body-style": ["error", "as-needed"]
   }
 }

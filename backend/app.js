@@ -6,17 +6,18 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { errors } = require('celebrate');
 
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
 const auth = require('./middlewares/auth');
 const userAuth = require('./routes/userAuth.js');
-const { errors } = require('celebrate');
+
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 
-const { PORT = 3000 } = process.env;
-// const { PORT = 3002 } = process.env;
+// const { PORT = 3000 } = process.env;
+const { PORT = 3002 } = process.env;
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -52,9 +53,10 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
+
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, //
-  max: 100 //
+  windowMs: 15 * 60 * 1000,
+  max: 100,
 });
 
 app.use(limiter);

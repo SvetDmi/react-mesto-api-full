@@ -59,7 +59,7 @@ function App() {
                 }
             })
                 .catch(err => {
-                    console.log('Проблема с токеном' + err);
+                    console.log(`Ошибка: ${err}. Проблема с токеном`);
                     setLoggedIn(false);
                 });
         }
@@ -85,15 +85,16 @@ function App() {
                     setIsInfoTooltipPopupOpen(true);
                 }
             })
-            .catch((err) => console.log('Некорректно заполнено одно из полей'));
-
+            .catch((err) => {
+                console.log(`Ошибка: ${err}. Некорректно заполнено одно из полей`);
+            })
     }
 
     function onLogin(email, password) {
         return auth.login(email, password)
             .then((res) => {
                 if (!res) {
-                    setMessage('Проверьте правильность введения email и пароля');
+                    setMessage(`Проверьте правильность введения email и пароля`);
                     setIsInfoTooltipPopupOpen(true);
                 }
                 else {
@@ -103,7 +104,7 @@ function App() {
                     history.push('/');
                 }
             })
-            .catch((err) => console.log('Пользователь с таким email не найден'));
+            .catch((err) => console.log(`Ошибка: ${err}. Пользователь с такими данными не найден`));
     }
 
     function onLogout() {
@@ -120,11 +121,10 @@ function App() {
         if (!loggedIn) {
             return;
         }
-        return api.getAllInfo()
+        api.getAllInfo()
             .then(([userData, cardsData]) => {
                 setCurrentUser(userData);
                 setCards(cardsData);
-                console.log([userData])
             })
 
             .catch((err) => {

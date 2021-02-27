@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
 const isURL = require('validator/lib/isURL');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -55,7 +55,5 @@ const userSchema = new mongoose.Schema({
 //         });
 //     });
 // };
-
-
 
 module.exports = mongoose.model('user', userSchema);

@@ -7,12 +7,12 @@ const validateUser = celebrate({
       if (validator.isEmail(value)) {
         return value;
       }
-      return helper.message('Невалидный email')
+      return helper.message('Невалидный email');
     }),
     password: Joi.string().required().min(8).messages({
       'string-min': 'Минимум 8 символа',
       'any.required': 'Обязательное поле',
-    })
+    }),
   }).unknown(true),
 });
 
@@ -35,30 +35,33 @@ const validateAvatar = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Невалидный URL')
+      return helper.message('Невалидный URL');
     }),
-  })
-})
+  }),
+});
 
 const validateCard = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30).messages({
-      'string-min': 'Минимум 2 символа',
-      'string-max': 'Максимум 30 символов',
-    }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'string-min': 'Минимум 2 символа',
+        'string-max': 'Максимум 30 символов',
+      }),
     link: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Невалидный URL')
+      return helper.message('Невалидный URL');
     }),
-  })
+  }),
 });
 
 const validateId = celebrate({
   params: Joi.object().keys({
     id: Joi.string().alphanum().length(24).id(),
-  })
+  }),
 });
 
-module.exports = { validateUser, validateProfile, validateAvatar, validateCard, validateId };
+module.exports = {
+  validateUser, validateProfile, validateAvatar, validateCard, validateId,
+};
