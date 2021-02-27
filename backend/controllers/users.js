@@ -73,11 +73,11 @@ const createUser = (req, res, next) => {
       }
       return bcrypt.hash(password, 10);
     })
-    .then((pass) => User.create({
-      name, about, avatar, email, pass,
+    .then((password) => User.create({
+      name, about, avatar, email, password,
     }))
-    .then(({ _id, mail }) => {
-      res.send({ _id, mail });
+    .then(({ _id, email }) => {
+      res.send({ _id, email });
     })
     .catch(next);
 };
