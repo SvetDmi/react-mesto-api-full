@@ -13,22 +13,17 @@ const getUsers = (req, res, next) => User.find({})
   .catch(next);
 
 const getUser = (req, res, next) => User.findById(req.params.id)
-  .then((user) => res.status(200).send(user))
-  .catch((err) => {
-    if (err.name === 'CastError') {
+  .then((user) => {
+    if (!user) {
       throw new ErrorNotFound404('Пользователь с таким id отсутствует');
     }
-    next(err);
-  });
+    return res.status(200).send(user);
+  })
+  .catch(next);
 
 const getMe = (req, res, next) => User.findById(req.user.id)
   .then((user) => res.status(200).send(user))
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      throw new ErrorNotFound404('Пользователь с таким id отсутствует');
-    }
-    next(err);
-  });
+  .catch(next);
 
 const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
@@ -73,11 +68,11 @@ const createUser = (req, res, next) => {
       }
       return bcrypt.hash(password, 10);
     })
-    .then((password) => User.create({
-      name, about, avatar, email, password,
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
     }))
-    .then(({ _id, email }) => {
-      res.send({ _id, email });
+    .then(({ _id, mail }) => {
+      res.send({ _id, mail });
     })
     .catch(next);
 };

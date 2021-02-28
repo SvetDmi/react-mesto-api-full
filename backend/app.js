@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
+const { ErrorNotFound404 } = require('./errors/index');
 
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
@@ -38,10 +39,8 @@ app.use('/', userAuth);
 app.use('/', auth, usersRouter);
 app.use('/', auth, cardsRouter);
 
-app.use('/', (req, res, next) => {
-  const error = new Error('Запрашиваемый ресурс не найден');
-  error.statusCode = 404;
-  next(error);
+app.use(() => {
+  throw new ErrorNotFound404('Запрашиваемый ресурс не найден');
 });
 
 app.use(errorLogger);
@@ -60,7 +59,6 @@ app.get('/crash-test', () => {
   }, 0);
 });
 app.use(errorHandler);
-
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });

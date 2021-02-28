@@ -21,13 +21,12 @@ const getCards = (req, res, next) => {
 };
 
 const getCard = (req, res, next) => Card.findById(req.params.id)
-  .then((card) => res.status(200).send(card))
-  .catch((err) => {
-    if (err.name === 'CastError') {
+  .then((card) => {
+    if (!card) {
       throw new ErrorNotFound404('Карточка с таким id отсутствует');
-    }
-    next(err);
-  });
+    } return res.status(200).send(card);
+  })
+  .catch(next);
 
 const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.id)

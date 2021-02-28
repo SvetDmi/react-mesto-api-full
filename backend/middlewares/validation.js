@@ -58,7 +58,13 @@ const validateCard = celebrate({
 
 const validateId = celebrate({
   params: Joi.object().keys({
-    id: Joi.string().alphanum().length(24).id(),
+    id: Joi.string().required().alphanum().length(24)
+      .custom((id, helper) => {
+        if (validator.isAlphanumeric(id)) {
+          return id;
+        }
+        return helper.message('Невалидный Id');
+      }),
   }),
 });
 
