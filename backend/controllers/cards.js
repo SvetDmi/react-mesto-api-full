@@ -31,7 +31,10 @@ const getCard = (req, res, next) => Card.findById(req.params.id)
 const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
-      if (JSON.stringify(card.owner) !== JSON.stringify(req.user.id)) {
+      if (!card) {
+        throw new ErrorNotFound404('Карточка с таким id отсутствует');
+      }
+      else if (JSON.stringify(card.owner) !== JSON.stringify(req.user.id)) {
         throw new ErrorForbidden403('Чужую карточку невозможно удалить');
       }
       return res.status(200).send(card);
